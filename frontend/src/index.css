@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .nav-link {
+        @apply hover:text-violet-500 mx-4
+    }
+
+    .nav-link.active{
+        @apply text-indigo-800 hover:text-violet-500
+    }
+
+    .hr{
+        @apply border-0 border-b border-slate-700 my-4
+    }
+
+    .control{
+        @apply mb-6 relative
+    }
+
+    .input{
+        @apply shadow-sm sm:text-sm h-10 px-8 bg-transparent rounded-md appearance-none relative block w-full py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10
+    }
+
+    .bg-primary{
+        @apply bg-white dark:bg-slate-900
+    }
+
+    .icon{
+        @apply absolute top-3 text-purple-700
+    }
+
+    .icon-start{
+        @apply left-2 icon
+    }
+
+    .icon-end{
+        @apply right-2 icon
+    }
+
+    .form-header{
+        @apply text-center text-3xl
+    }
+
+    .form-link{
+        @apply text-purple-700
+    }
+}
