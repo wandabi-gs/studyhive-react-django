@@ -6,7 +6,12 @@ export default {
     "./src/**/*.{js,jsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily:{
+        'poppins': ['Poppins'],
+        'roboto' : ['Roboto']
+      }
+    },
   },
   plugins: [],
 }

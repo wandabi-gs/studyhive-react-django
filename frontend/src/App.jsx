@@ -1,27 +1,42 @@
-import React from 'react'
+import React, { useEffect, Suspense, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { is_authenticated } from './backend'
+import useAuthStore  from './store/auth'
+import useThemeStore from './store/theme'
 import Home from './components/Home'
 import Register from './components/auth/Register'
 import Login from './components/auth/Login'
 import Base from './components/Base'
+import Logout from './components/auth/Logout'
+import Settings from './components/Settings'
 
 function App() {
 
-  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
+  const is_authenticated = useAuthStore((state) => state.isAuthenticated)
+  const check_auth = useAuthStore((state) => state.checkAuth)
+  const verifyDarkMode = useThemeStore((state) => state.verifyDarkMode)
 
+
+  useEffect(() => {
+    verifyDarkMode()
+    if(!is_authenticated){
+      check_auth()
+    }
+  
+  })
 
   return (
+    <Suspense fallback="Loading ....." >
     <Base>
       <Routes>
         <Route path='' element={<Home />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/logout' element={<Logout />} />
+        <Route path='/settings' element={<Settings />} />
       </Routes>
     </Base>
+    </Suspense>
   )
 }
 

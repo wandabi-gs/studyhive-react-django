@@ -16,3 +16,16 @@ export const user_register = (data) => {
         data
     )
 }
+
+export const user_login = (data) => {
+    let formData = new FormData();
+
+    for(const name in data){
+        formData.append(name, data[name])
+    }
+
+    return axios.post(
+        backendUrl('auth/login'),
+        data
+    )
+}
