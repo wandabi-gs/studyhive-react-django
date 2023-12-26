@@ -52,9 +52,9 @@ The project utilizes machine learning models for:
 2. Set up virtual environment:
 
    ```bash
+    cd backend
     python -m venv venv
-    source venv/bin/activate  # For Linux/Mac
-    .\venv\Scripts\activate  # For Windows
+    source venv/bin/activate  
 
 3. Install dependencies
 
@@ -69,7 +69,3 @@ The project utilizes machine learning models for:
 5. Start Development Server:
    ```bash
     python manage.py runserver
-
-
-
-    
