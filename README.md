@@ -50,17 +50,24 @@ The project utilizes machine learning models for:
    cd studyhive
 
 2. Set up virtual environment:
+
+   ```bash
     python -m venv venv
     source venv/bin/activate  # For Linux/Mac
     .\venv\Scripts\activate  # For Windows
 
 3. Install dependencies
+
+   ```bash
     pip install -r requirements.txt
 
 4. Run migrations:
+
+   ```bash
     python manage.py migrate
 
 5. Start Development Server:
+   ```bash
     python manage.py runserver
 
 
