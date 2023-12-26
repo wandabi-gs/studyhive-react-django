@@ -35,11 +35,11 @@ The project utilizes machine learning models for:
 
 1. Content Recommendation:
    - Recommending personalized content based on user interests.
-   - Framework: sc
+   - Framework: Tensorflow Recommenders
 
 2. Content Filtering:
    - Filtering offensive content and identifying potential fake content.
-   - Framework: 
+   - Framework: Scikit Learn
 
 ## Setup
 
