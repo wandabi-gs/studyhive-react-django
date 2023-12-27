@@ -73,4 +73,12 @@
     .social-button{
         @apply border border-purple-600 p-2 w-full rounded-full
     }
+
+    .card-header{
+        @apply font-roboto text-indigo-700 dark:text-indigo-400 font-bold
+    }
+
+    .card-action-btn{
+        @apply border py-1 px-4 rounded-full border-violet-700 dark:border-violet-400 hover:border-2 hover:text-violet-900 dark:hover:text-violet-100 dark:hover:border-violet-600 hover:bg-violet-100 dark:hover:bg-violet-800
+    }
 }

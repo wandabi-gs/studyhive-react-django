@@ -31,7 +31,7 @@ function Base({ children }) {
 
   return (
     <React.Fragment>
-      <nav className='sticky top-0 flex justify-between px-3 py-4 shadow-2xl'>
+      <nav className='sticky transition-all duration-1000 ease-in-out bg-white dark:bg-slate-800 top-0 flex justify-between px-3 py-4 shadow-2xl'>
         <div>
           <p className='text-2xl font-semibold'>StudyHive</p>
         </div>

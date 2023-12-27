@@ -30,15 +30,6 @@ function Login() {
     setPasswordShown(!passwordShown)
   }
 
-  const postForm = (event) => {
-    event.preventDefault();
-    if (username.trim().length == 0 || password.length == 0) {
-      setError("Please fill out all fields")
-      return;
-    }
-    mutate({ "password": password, "email": username });
-  }
-
   const { mutate, isLoading } = useMutation(UserLogin, {
     onSuccess: (data) => {
       login(data)
@@ -47,6 +38,15 @@ function Login() {
       setError("Invalid login credentials")
     }
   });
+
+  const postForm = (event) => {
+    event.preventDefault();
+    if (username.trim().length == 0 || password.length == 0) {
+      setError("Please fill out all fields")
+      return;
+    }
+    mutate({ "password": password, "email": username });
+  }
 
   return (
     <div className="mt-10 flex justify-center">

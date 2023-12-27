@@ -9,6 +9,7 @@ import Login from './components/auth/Login'
 import Base from './components/Base'
 import Logout from './components/auth/Logout'
 import Settings from './components/Settings'
+import Category from './components/interest/Category'
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/settings' element={<Settings />} />
+        <Route path='/category/:pk' element={<Category />} />
       </Routes>
     </Base>
     </Suspense>
