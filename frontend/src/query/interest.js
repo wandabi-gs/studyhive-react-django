@@ -25,7 +25,7 @@ export const categoriesQuery = async () => {
 
 export const categoryQuery = async (uid) => {
     const query = `
-        query($uid: String!){
+        query($uid: UUID!){
             category(categoryUid: $uid){
                 uid
                 name
@@ -34,12 +34,18 @@ export const categoryQuery = async (uid) => {
                     uid
                     name
                     description
+                    recommendations{
+                        uid
+                        title
+                        url
+                        preview
+                    }
                 }
             }
         }
     `
 
-    const variables = {uid}
+    const variables = { uid }
 
     const data = await executeQuery(query, variables)
 
@@ -63,7 +69,7 @@ export const intrestQuery = async (uid) => {
         }
     `
 
-    const variables = {uid}
+    const variables = { uid }
 
     const data = await executeQuery(query, variables)
 
@@ -107,7 +113,7 @@ export const userInterestQuery = async (uid) => {
         }
     `
 
-    const variables = {uid}
+    const variables = { uid }
 
     const data = await executeQuery(query, variables)
 

@@ -1,16 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link, useNavigate } from 'react-router-dom'
-import { faUser, faEnvelope, faEye, faEyeSlash, faLock } from '@fortawesome/free-solid-svg-icons'
-import { faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faUser, faEye, faEyeSlash, faLock } from '@fortawesome/free-solid-svg-icons'
 import { useMutation } from "react-query";
-import { UserLogin } from "../../mutation/user";
 import useAuthStore from "../../store/auth";
+import useThemeStore from '../../store/theme'
+import { UserLogin } from "../../mutation/user";
+import blackLogo from "../../assets/logo/black.png"
+import whiteLogo from "../../assets/logo/white.png"
 
 function Login() {
   const navigate = useNavigate();
 
+  const darkModeEnabled = useThemeStore(state => state.darkModeEnabled);
+
   const login = useAuthStore((state) => state.login);
+  const is_authenticated = useAuthStore((state) => state.isAuthenticated)
 
   const [input, setInput] = useState({
     username: "",
@@ -48,53 +53,50 @@ function Login() {
     mutate({ "password": password, "email": username });
   }
 
+  useEffect(() => {
+    console.log(is_authenticated)
+    if (is_authenticated) {
+      navigate('/')
+    }
+  }, [])
+
   return (
     <div className="mt-10 flex justify-center">
-      <form className="basis-3/12 p-4" onSubmit={postForm}>
-        <div className="">
-          <p className='form-header'>Login to Your Acccount</p>
-          <p className='text-center'>Don't have an account? <Link className='form-link' to="/register">Sign up</Link></p>
-          {error && (<p className='m-3 text-center input-error'>{error}</p>)}
-        </div>
-
-        <div className="control mt-5">
-          <label htmlFor="username" className="form-label">Email</label>
-          <div className="input-control">
-            <input type="text" id='username' value={username} onChange={ChangeInput('username')} className="input peer" placeholder='Your email' />
-            <FontAwesomeIcon icon={faUser} className='icon-start' />
+      <div className="basis-3/12 p-4 flex flex-col">
+        <div className='flex justify-center'>
+          <div className="rounded-full w-44 h-44 p-6 mb-5 border-4 border-indigo-800 dark:border-indigo-400">
+            <img src={darkModeEnabled ? whiteLogo : blackLogo} className='' alt="" />
           </div>
         </div>
-
-        <div className="control">
-          <label htmlFor="password" className="form-label">Password</label>
-          <div className="input-control">
-            <input id='password' type={passwordShown ? "text" : "password"} value={password} onChange={ChangeInput('password')} className="input peer" placeholder='Your password' />
-            <FontAwesomeIcon icon={faLock} className='icon-start' />
-            <FontAwesomeIcon onClick={TogglePassword} icon={passwordShown ? faEyeSlash : faEye} className='icon-end' />
+        <form onSubmit={postForm}>
+          <div className="">
+            <p className='form-header'>Login to Your Acccount</p>
+            <p className='text-center'>Don't have an account? <Link className='form-link' to="/register">Sign up</Link></p>
+            {error && (<p className='m-3 text-center input-error'>{error}</p>)}
           </div>
-        </div>
 
-        <div className="flex justify-end control">
-          <button type="submit" className='form-button'>Login</button>
-        </div>
+          <div className="control mt-5">
+            <label htmlFor="username" className="form-label">Email</label>
+            <div className="input-control">
+              <input type="text" id='username' value={username} onChange={ChangeInput('username')} className="input peer" placeholder='Your email' />
+              <FontAwesomeIcon icon={faUser} className='icon-start' />
+            </div>
+          </div>
 
-        <div className="control">
-          <p className='text-2xl text-center'>Or</p>
-        </div>
+          <div className="control">
+            <label htmlFor="password" className="form-label">Password</label>
+            <div className="input-control">
+              <input id='password' type={passwordShown ? "text" : "password"} value={password} onChange={ChangeInput('password')} className="input peer" placeholder='Your password' />
+              <FontAwesomeIcon icon={faLock} className='icon-start' />
+              <FontAwesomeIcon onClick={TogglePassword} icon={passwordShown ? faEyeSlash : faEye} className='icon-end' />
+            </div>
+          </div>
 
-
-        <div className="control">
-          <button className="social-button">
-            <FontAwesomeIcon icon={faGoogle} className='mx-4' />
-            Continue with Google
-          </button>
-
-          <button className="social-button mt-4">
-            <FontAwesomeIcon icon={faGithub} className='mx-4' />
-            Continue with Github
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end control">
+            <button type="submit" className='form-button'>Login</button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

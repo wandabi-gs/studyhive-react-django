@@ -10,6 +10,8 @@ import Base from './components/Base'
 import Logout from './components/auth/Logout'
 import Settings from './components/Settings'
 import Category from './components/interest/Category'
+import Categories from './components/interest/Categories'
+import GroupChats from './components/chat/GroupChats'
 
 function App() {
 
@@ -35,7 +37,9 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/settings' element={<Settings />} />
-        <Route path='/category/:pk' element={<Category />} />
+        <Route path='/categories' element={<Categories />} />
+        <Route path='/category/:pk/:name' element={<Category />} />
+        <Route path='/group-chat' element={<GroupChats />} />
       </Routes>
     </Base>
     </Suspense>
