@@ -3,6 +3,7 @@ import graphene
 class UserType(graphene.ObjectType):
     email = graphene.String()
     username = graphene.String()
+    image = graphene.String()
 
 class UserQuery(graphene.ObjectType):
     user_profile = graphene.Field(UserType)

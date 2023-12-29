@@ -34,37 +34,53 @@ export default Settings
 
 const ProfileSettings = () => {
 
-  const [profile, setProfile] = useState({})
+  const [profile, setProfile] = useState()
+
+  const [email, setEmail] = useState("")
 
   const { isLoading } = useQuery("user-profile", profileQuery, {
-    onSuccess : (data) => {
+    onSuccess: (data) => {
       setProfile(data)
-      
+      setEmail(data?.email)
     }
   })
 
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-2">Profile Information</h3>
-      <div className="control">
-        <input type="text" name="" value={profile?.username} id="username" className="profile-input" />
-      </div>
+      {profile && (
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Profile Information</h3>
+          <div className="control">
+            <input type="text" readOnly defaultValue={profile?.username} id="username" className="select-none profile-input" />
+          </div>
 
-      <div className="control">
-        <input type="email" value={profile?.email} id="email" className="profile-input" />
-      </div>
+          <div className="control">
+            <input type="email" onChange={(e) => setEmail(e.target.value)} value={email} id="email" className="profile-input" />
+          </div>
+
+          <div className="control">
+            <button className="form-button">Update Profile</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 const VisibilitySettings = () => {
+
+  const ToggleVisibility = (event) => {
+    document.documentElement.classList.remove('font-poppins')
+    document.documentElement.classList.add('font-roboto')
+  }
+
   return (
     <div>
       <div className="control">
 
         <label htmlFor="private-account" className="profile-switch-cont">
           <p className="profile-switch-label">Private Account</p>
-          <input type="checkbox" name="" id="private-account" />
+          <input type="checkbox" name="" onClick={ToggleVisibility} id="private-account" />
         </label>
       </div>
     </div>

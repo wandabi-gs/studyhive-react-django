@@ -23,6 +23,7 @@ class Recommendation(models.Model):
     url = models.TextField(default="")
     title = models.TextField(default="")
     preview = models.TextField(default="")
+    thumbnail = models.URLField(default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
