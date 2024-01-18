@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSun, faMoon, faHome, faDoorClosed, faDoorOpen, faUserPlus, faGear, faHamburger, faBars, faBook, faUserCircle, faLightbulb, faQuestionCircle, faPeopleGroup, faUserGroup } from '@fortawesome/free-solid-svg-icons'
+import { faSun, faMoon, faHome, faDoorClosed, faDoorOpen, faUserPlus, faGear, faHamburger, faBars, faBook, faUserCircle, faLightbulb, faQuestionCircle, faPeopleGroup, faUserGroup, faUsers } from '@fortawesome/free-solid-svg-icons'
 import useAuthStore from "../store/auth";
 import useThemeStore from '../store/theme'
 
@@ -43,10 +43,12 @@ function Base({ children }) {
     <div className="h-screen w-screen flex">
       <aside className='basis-16 min-w-fit shadow-xl flex flex-col p-3 bg-white dark:bg-slate-900 transition-all duration-500 ease-in-out' id='sidebar'>
         <SidebarLink display="all" sidebarActive={sidebarActive} currentRoute={route} name="Home" url="/" route="home" icon={faHome} getRoute={getRoute} />
+        
+        <SidebarLink display="all" sidebarActive={sidebarActive} currentRoute={route} name="Categories" url="/categories" route="categories" icon={faBook} getRoute={getRoute} />
+
+        <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Connections" url="/connections" route="connections" icon={faUsers} getRoute={getRoute} />
 
         <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Recommendations" url="/recommendations" route="recommendations" icon={faLightbulb} getRoute={getRoute} />
-
-        <SidebarLink display="all" sidebarActive={sidebarActive} currentRoute={route} name="Categories" url="/categories" route="categories" icon={faBook} getRoute={getRoute} />
 
         <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Account Settings" url="/settings" route="settings" icon={faGear} getRoute={getRoute} />
 

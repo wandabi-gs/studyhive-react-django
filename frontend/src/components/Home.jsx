@@ -17,7 +17,7 @@ function Home() {
 
   const featureDataFakeContent = {
     title: 'Filtering Fake Content',
-    description: 'Our platform leverages advanced machine learning algorithms to filter out offensive and inappropriate content. Additionally, it identifies potential misinformation, ensuring a safe and trustworthy environment for learning.',
+    description: 'This platform leverages advanced machine learning algorithms to filter out offensive and inappropriate content. Additionally, it identifies potential misinformation, ensuring a safe and trustworthy environment for learning.',
   };
 
   const featureDataGroupDiscussions = {
@@ -42,13 +42,13 @@ function Home() {
         <div className="basis-1/3">
           <FeatureCard data={featureDataPersonalized} isOdd={true} />
         </div>
-        <div className="h-40"></div>
+        <div className="h-24"></div>
         <div className="basis-1/3">
           <FeatureCard data={featureDataFakeContent} isOdd={true} />
         </div>
       </div>
 
-      <div className="basis-1/3 p-2">
+      <div className="basis-1/3 p-2 flex flex-col justify-center">
         <div className="w-full flex justify-center my-4">
           <img className='w-72' src={darkModeEnabled ? whiteLogo : blackLogo} alt="" />
         </div>
@@ -56,7 +56,7 @@ function Home() {
         <div className="flex justify-center w-full">
           <div className="mt-4 text-center">
             <p className="text-5xl font-bold">Welcome To Studyhive</p>
-            <p className="text-xl mt-2">Your Group Based online learning platform powered with a personalised recommendation engine</p>
+            <p className="text-xl mt-2">Your Group Based online learning platform powered by a personalised recommendation engine</p>
           </div>
         </div>
 
@@ -66,12 +66,10 @@ function Home() {
       </div>
 
 
-      <div className="basis-1/3 p-2 flex flex-col w-full">
+      <div className="basis-1/3 p-2 flex flex-col w-full justify-between">
         <div className="basis-1/3">
           <FeatureCard data={featureDataGroupDiscussions} isOdd={false} />
         </div>
-
-        <div className="h-40"></div>
 
         <div className="basis-1/3">
           <FeatureCard data={featureDataGroupChats} isOdd={false} />
@@ -98,10 +96,11 @@ export const FeatureCard = ({ data, isOdd }) => {
         transition={{ duration: 1.5 }}
         className="basis-3/5 text-justify p-4 rounded-xl "
       >
-        <h3 className='text-3xl mb-2 py-4 card-header'>
-          <span className="border-b py-3">{data.title}</span>
+        <h3 className='text-3xl py-3 card-header'>
+          <span className="py-3">{data.title}</span>
         </h3>
-        <p className='text-xl mt-2'>{data.description}</p>
+          <hr />
+        <p className='text-xl py-3'>{data.description}</p>
       </motion.div>
     </div>
   );

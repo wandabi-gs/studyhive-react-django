@@ -38,7 +38,7 @@ class InterestQuery(graphene.ObjectType):
         try:
             interests = UserInterest.objects.get(user=user)
 
-        except UserInterest.DoesNotExist:
+        except UserInterest. DoesNotExist:
             pass
 
         return interests

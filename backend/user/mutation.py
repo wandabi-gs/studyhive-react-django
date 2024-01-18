@@ -1,9 +1,33 @@
 import graphene
-from user.models import CustomUser
+from user.models import CustomUser, Connection, ReportedUser
 
 class ErrorType(graphene.ObjectType):
     field = graphene.String()
     message = graphene.String()
+
+
+class TogglePrivateAccount(graphene.Mutation):
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    error = graphene.Field(ErrorType)
+
+    def mutate(self, info):
+        success = True
+        message = ""
+        error = None
+
+        if not info.context.user:
+            success = False
+            message = "User is not authenticated"
+
+        else:
+            user = info.context.user
+            user.private = not user.private
+            user.save()
+        
+        return TogglePrivateAccount(success=success, message=message, error=error)
+
 
 class ChangePassword(graphene.Mutation):
     class Arguments:
@@ -59,6 +83,7 @@ class UserRegister(graphene.Mutation):
         success = True
         message = ""
         error = None
+        username = username.upper()
 
         if len(email) == 0:
             error = ErrorType(field="email", message="Email field cannot be empty")
@@ -86,5 +111,107 @@ class UserRegister(graphene.Mutation):
 
         return UserRegister(success=success, message=message, error=error) # type: ignore
     
+class AddConnection(graphene.Mutation):
+    class Arguments:
+        user_uid = graphene.UUID(required=True)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    error = graphene.Field(ErrorType)
+
+    def mutate(self, info, user_uid):
+        success = True
+        message = ""
+        error = None
+
+        user = info.context.user
+        connection = CustomUser.objects.get(uid=user_uid)
+
+        if user.uid == user_uid:
+            error = ErrorType(field="user_uid", message="You cannot add yourself")
+            success = False
+
+        if success:
+            try:
+                user_connection = Connection.objects.get(connection=connection)
+                if user_connection.connection_status == "revoked":
+                    user_connection.connection_status = "pending"
+                    user_connection.save()
+                    message = "Connection request sent successfully"
+                else:
+                    error = ErrorType(field="user_uid", message="You are already connected")
+                    success = False
+            except CustomUser.connection.RelatedObjectDoesNotExist:
+                user.connection.create(connection=connection, connection_status="pending")
+                message = "Connection request sent successfully"
+
+        return AddConnection(success=success, message=message, error=error)
+
+class AcceptConnection(graphene.Mutation):
+    class Arguments:
+        connection_uid = graphene.UUID(required=True)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    error = graphene.Field(ErrorType)
+
+    def mutate(self, info, connection_uid):
+        success = True
+        message = ""
+        error = None
+
+        user = info.context.user
+        connection = Connection.objects.get(uid=connection_uid)
+
+        if user.uid != connection.connection.uid:
+            error = ErrorType(field="connection_uid", message="You cannot accept this connection")
+            success = False
+        
+        else:
+            connection.connection_status = "accepted"
+            connection.save()
+            message = "Connection accepted successfully"
+
+        return AcceptConnection(success=success, message=message, error=error)
+
+class addReportedUser(graphene.Mutation):
+    class Arguments:
+        user_uid = graphene.UUID(required=True)
+        reason = graphene.String(required=True)
+
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    error = graphene.Field(ErrorType)
+
+    def mutate(self, info, user_uid, reason):
+        success = True
+        message = ""
+        error = None
+
+        user = info.context.user
+        reported_user = CustomUser.objects.get(uid=user_uid)
+
+        if user.uid == user_uid:
+            error = ErrorType(field="user_uid", message="You cannot report yourself")
+            success = False
+
+        if success:
+            try:
+                ReportedUser.objects.get(reported_user=reported_user)
+                error = ErrorType(field="user_uid", message="You have already reported this user")
+                success = False
+
+            except ReportedUser.DoesNotExist:
+                ReportedUser.objects.create(user=reported_user, reporter=user, reason=reason)
+                message = "User reported successfully"
+
+        return addReportedUser(success=success, message=message, error=error)
+        
 class UserMutation(graphene.ObjectType):
     register_user = UserRegister.Field()
+    change_password = ChangePassword.Field()
+    add_connection = AddConnection.Field()
+    accept_connection = AcceptConnection.Field()
+    report_user = addReportedUser.Field()
+    toggle_private = TogglePrivateAccount.Field()

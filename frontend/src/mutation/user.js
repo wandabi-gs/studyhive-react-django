@@ -34,9 +34,49 @@ export const UserRegister = async (data) => {
     }
   `;
 
-  const variables = {"email":email, "password" :password, "username":username };
+  const variables = { "email": email, "password": password, "username": username };
 
   const response = await executeMutation(mutation, variables);
 
   return response.registerUser;
 };
+
+export const changePassword = async (data) => {
+  const { oldPassword, newPassword } = data;
+
+  const mutation = `
+    mutation($oldPassword: String!, $newPassword: String!) {
+      changePassword(oldPassword: $oldPassword, newPassword: $newPassword) {
+        success
+        message
+        error {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const variables = { "oldPassword": oldPassword, "newPassword": newPassword };
+  const response = await executeMutation(mutation, variables);
+
+  return response.changePassword;
+
+}
+
+export const TogglePrivate = async () => {
+  const mutation = `
+    mutation {
+      togglePrivate {
+        success
+        message
+      }
+    }
+  `;
+
+  const variables = {};
+
+  const response = await executeMutation(mutation, variables);
+
+  return response.togglePrivate;
+}

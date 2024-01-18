@@ -46,7 +46,7 @@ class ClearUserInterest(graphene.Mutation):
 
         return ClearUserInterest(success=success)
 
-class UserLikeInterest(graphene.Mutation):
+class UserLikeRecommendation(graphene.Mutation):
     class Arguments:
         recommendationUid = graphene.UUID(required=True)
 
@@ -59,9 +59,9 @@ class UserLikeInterest(graphene.Mutation):
         userReview, created = UserReview.objects.get_or_create(user=user,recommendation=recommendation)
         userReview.user_like()
 
-        return UserLikeInterest(success=success)
+        return UserLikeRecommendation(success=success)
 
-class UserDisLikeInterest(graphene.Mutation):
+class UserDisLikeRecommendation(graphene.Mutation):
     class Arguments:
         recommendationUid = graphene.UUID(required=True)
 
@@ -75,7 +75,7 @@ class UserDisLikeInterest(graphene.Mutation):
         
         userReview.user_dislike()
 
-        return UserDisLikeInterest(success=success)
+        return UserDisLikeRecommendation(success=success)
 
 class UserAddReview(graphene.Mutation):
     class Arguments:
@@ -98,8 +98,8 @@ class InterestMutation(graphene.ObjectType):
     add_interest = AddUserInterest.Field()
     remove_interest = RemoveUserInterest.Field()
     clear_interest = ClearUserInterest.Field()
-    like_interest = UserLikeInterest.Field()
-    dislike_interest = UserDisLikeInterest.Field()
+    like_recommendation = UserLikeRecommendation.Field()
+    dislike_recommendation = UserDisLikeRecommendation.Field()
     add_review = UserAddReview.Field()
 
 

@@ -6,21 +6,19 @@ import Cookies from 'js-cookies'
 
 import { GraphQLClient } from 'graphql-request';
 
-var headers = {}
-
-if(Cookies.getItem("session_token")){
-  headers = {
-    Authorization: `JWT ${Cookies.getItem("session_token")} `
-  }
-}
-
-export const graphQLClient = new GraphQLClient(API_ENDPOINT, {
-  headers: headers
-});
-
-
-
 export async function executeMutation(mutation, variables) {
+  var headers = {}
+
+  if (Cookies.getItem("session_token")) {
+    headers = {
+      Authorization: `JWT ${Cookies.getItem("session_token")} `
+    }
+  }
+
+  const graphQLClient = new GraphQLClient(API_ENDPOINT, {
+    headers: headers
+  });
+
   try {
     const data = await graphQLClient.request(mutation, variables);
     return data;
@@ -31,6 +29,18 @@ export async function executeMutation(mutation, variables) {
 }
 
 export async function executeQuery(query, variables) {
+  var headers = {}
+
+  if (Cookies.getItem("session_token")) {
+    headers = {
+      Authorization: `JWT ${Cookies.getItem("session_token")} `
+    }
+  }
+
+  const graphQLClient = new GraphQLClient(API_ENDPOINT, {
+    headers: headers
+  });
+
   try {
     const data = await graphQLClient.request(query, variables);
     return data;
@@ -40,10 +50,10 @@ export async function executeQuery(query, variables) {
   }
 }
 
-export const showMedia = (url) =>{
-  return MEDIA_URL+"/"+url
+export const showMedia = (url) => {
+  return MEDIA_URL + "/" + url
 }
 
-export const is_authenticated = () =>{
+export const is_authenticated = () => {
   return Cookies.getItem('session_token') ? true : false;
 }

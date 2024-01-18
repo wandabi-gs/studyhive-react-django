@@ -18,11 +18,17 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+rec_sources = [
+    ['books', 'books'],
+    ['youtube', 'youtube']
+]
+
 class Recommendation(models.Model):
     uid = models.UUIDField(unique=True, default=uuid4, editable=False)
     url = models.TextField(default="")
     title = models.TextField(default="")
     preview = models.TextField(default="")
+    source = models.CharField(max_length=20, default='books', choices=rec_sources)
     thumbnail = models.URLField(default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -30,6 +36,9 @@ class Recommendation(models.Model):
     class Meta:
         ordering = ('-created_at',)
         verbose_name_plural = 'Recommendations'
+
+    def __str__(self):
+        return self.title
     
 class Interest(models.Model):
     uid = models.UUIDField(unique=True, default=uuid4, editable=False)
@@ -60,7 +69,7 @@ class UserInterest(models.Model):
         verbose_name_plural = 'User Intrests'
 
     def __str__(self):
-        return self.user
+        return self.user.email
     
 class UserReview(models.Model):
     recommendation = models.ForeignKey(to=Recommendation, on_delete=models.CASCADE)
@@ -87,3 +96,6 @@ class UserReview(models.Model):
 
     def add_review(self, review):
         self.review = review
+
+    def __str__(self):
+        return self.user.email

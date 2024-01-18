@@ -12,16 +12,20 @@ import Settings from './components/Settings'
 import Category from './components/interest/Category'
 import Categories from './components/interest/Categories'
 import GroupChats from './components/chat/GroupChats'
+import Connection from './components/connection/Connection'
+import Connections from './components/connection/Connections'
 
 function App() {
 
   const is_authenticated = useAuthStore((state) => state.isAuthenticated)
   const check_auth = useAuthStore((state) => state.checkAuth)
   const verifyDarkMode = useThemeStore((state) => state.verifyDarkMode)
+  const verifyFont = useThemeStore((state) => state.verifyFont)
 
 
   useEffect(() => {
     verifyDarkMode()
+    verifyFont()
     if(!is_authenticated){
       check_auth()
     }
@@ -40,6 +44,8 @@ function App() {
         <Route path='/categories' element={<Categories />} />
         <Route path='/category/:pk/:name' element={<Category />} />
         <Route path='/group-chat' element={<GroupChats />} />
+        <Route path='/connections' element={<Connections />} />
+        <Route path='/connection/:pk' element={<Connection />} />
       </Routes>
     </Base>
     </Suspense>
