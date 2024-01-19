@@ -1,5 +1,6 @@
 import graphene
 from user.models import CustomUser, Connection, ReportedUser
+from intrest.models import UserInterest
 
 class ErrorType(graphene.ObjectType):
     field = graphene.String()
@@ -103,10 +104,10 @@ class UserRegister(graphene.Mutation):
                     error = ErrorType(field="password", message="Password must contain at least 8 characters") # type: ignore
                     success = False
                 else:
-                    #username to be uppercase
                     user = CustomUser(email=email, username=username.upper())
                     user.set_password(password)
                     user.save()
+                    UserInterest.objects.create(user=user)
                     message = "Account created successfully"
 
         return UserRegister(success=success, message=message, error=error) # type: ignore

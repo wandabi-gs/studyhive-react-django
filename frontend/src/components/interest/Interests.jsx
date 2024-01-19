@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from "react-query";
 import { useMutation } from 'react-query'
 import { addUserIntrestMutation } from '../../mutation/interest';
-import { categoriesQuery } from '../../query/interest'
+import { categoriesQuery, myInterestQuery } from '../../query/interest'
 
 function Categories() {
 
@@ -19,6 +19,7 @@ function Categories() {
 
     const [dcategories, setDCategories] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [interests, setInterests] = useState([]);
 
     const { isLoading } = useQuery("categories", categoriesQuery, {
         onSuccess: (data) => {
@@ -26,6 +27,13 @@ function Categories() {
             setCategories(data)
         }
     });
+
+    const { isLoading: interestLoading } = useQuery("interests", myInterestQuery, {
+        onSuccess: (data) => {
+            setInterests(data.interests)
+        }
+    })
+
     const searchCategory = (e) => {
         e.preventDefault();
         const searchTerm = e.target.value.toLowerCase().trim();
@@ -37,14 +45,26 @@ function Categories() {
                 const matchingInterests = category.intrests.filter(interest => interest.name.toLowerCase().includes(searchTerm) || interest.description.toLowerCase().includes(searchTerm));
                 return matchingInterests.length > 0 ? { ...category, intrests: matchingInterests } : null;
             }
-        }).filter(Boolean);  
+        }).filter(Boolean);
 
         setCategories(filteredCategories);
     };
 
     return (
         <div>
-            <div className="my-2 flex justify-between -z-10">
+            <p className="text-3xl font-bold">My Interests</p>
+            <div className="mt-3">
+                {interests.length > 0 ?
+                    <div>
+                        {interests.map((interest, index) => (
+                            <div>{interest.name}</div>
+                        ))}
+                    </div>
+                    :
+                    <div>No interests</div>
+                }
+            </div>
+            <div className="my-2 flex justify-between">
                 <p className="text-3xl font-bold">Categories</p>
                 <div>
                     <input onChange={searchCategory} id='search' type="text" className="input p-2 px-4" placeholder='search' />

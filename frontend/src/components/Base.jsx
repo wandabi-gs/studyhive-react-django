@@ -44,7 +44,7 @@ function Base({ children }) {
       <aside className='basis-16 min-w-fit shadow-xl flex flex-col p-3 bg-white dark:bg-slate-900 transition-all duration-500 ease-in-out' id='sidebar'>
         <SidebarLink display="all" sidebarActive={sidebarActive} currentRoute={route} name="Home" url="/" route="home" icon={faHome} getRoute={getRoute} />
         
-        <SidebarLink display="all" sidebarActive={sidebarActive} currentRoute={route} name="Categories" url="/categories" route="categories" icon={faBook} getRoute={getRoute} />
+        <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Interests" url="interests" route="interests" icon={faBook} getRoute={getRoute} />
 
         <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Connections" url="/connections" route="connections" icon={faUsers} getRoute={getRoute} />
 
