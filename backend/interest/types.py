@@ -1,5 +1,5 @@
 from graphene_django.types import DjangoObjectType
-from intrest.models import Category, Interest, Recommendation, UserInterest, UserReview
+from interest.models import Category, Interest, Recommendation, UserInterest, UserReview
 
 class CategoryType(DjangoObjectType):
     class Meta:

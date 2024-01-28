@@ -1,6 +1,9 @@
 import graphene
+from graphene_file_upload.scalars import Upload
+from rest_framework.authtoken.views import APIView
+from rest_framework.response import Response
 from user.models import CustomUser, Connection, ReportedUser
-from intrest.models import UserInterest
+from interest.models import UserInterest
 
 class ErrorType(graphene.ObjectType):
     field = graphene.String()
@@ -8,7 +11,6 @@ class ErrorType(graphene.ObjectType):
 
 
 class TogglePrivateAccount(graphene.Mutation):
-
     success = graphene.Boolean()
     message = graphene.String()
     error = graphene.Field(ErrorType)
@@ -73,8 +75,8 @@ class UserRegister(graphene.Mutation):
     class Arguments:
         email = graphene.String()
         username = graphene.String()
-        image = graphene.String(required=False)
         password = graphene.String()
+        # image = Upload(required=False)
 
     success = graphene.Boolean()
     message = graphene.String()
@@ -111,6 +113,53 @@ class UserRegister(graphene.Mutation):
                     message = "Account created successfully"
 
         return UserRegister(success=success, message=message, error=error) # type: ignore
+    
+
+class UpdateProfile(graphene.Mutation):
+    class Arguments:
+        email = graphene.String(required=False)
+        image = Upload(required=False)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    error = graphene.Field(ErrorType)
+
+    def mutate(self, info, email, image):
+        success = True
+        message = ""
+        error = None
+
+        authuser = info.context.user
+        user = CustomUser.objects.get(id=authuser.id)
+
+        if not info.context.user:
+            success = False
+            error = ErrorType(field=None, message="You must be logged in to update your profile")
+        
+        if success and len(email) == 0:
+            error = ErrorType(field="email", message="Email field cannot be empty")
+            success = False
+        
+        if success:
+            if not user.email == email:
+                try:
+                    CustomUser.objects.get(email=email)
+                    error = ErrorType(field="email", message="This email is already registered")
+                    success = False
+
+                except CustomUser.DoesNotExist:
+                    user.email = email
+
+        if image:
+            user.image = image
+        print(email)
+        print(image)
+        user.save()
+        message = "Profile updated successfully"
+
+        return UpdateProfile(success=success, message=message, error=error)
+    
+
     
 class AddConnection(graphene.Mutation):
     class Arguments:
@@ -216,3 +265,4 @@ class UserMutation(graphene.ObjectType):
     accept_connection = AcceptConnection.Field()
     report_user = addReportedUser.Field()
     toggle_private = TogglePrivateAccount.Field()
+    update_profile = UpdateProfile.Field()

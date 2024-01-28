@@ -8,6 +8,7 @@ import useThemeStore from '../../store/theme'
 import { UserLogin } from "../../mutation/user";
 import blackLogo from "../../assets/logo/black.png"
 import whiteLogo from "../../assets/logo/white.png"
+import Loader from '../Loader';
 
 function Login() {
   const navigate = useNavigate();
@@ -59,6 +60,10 @@ function Login() {
       navigate('/')
     }
   }, [])
+
+  if(isLoading){
+    return <Loader />
+  }
 
   return (
     <div className="mt-10 flex justify-center">

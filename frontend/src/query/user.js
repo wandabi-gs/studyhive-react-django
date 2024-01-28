@@ -6,6 +6,7 @@ export const profileQuery = async () => {
             userProfile{
                 email
                 username
+                image
                 private
             }
         }
@@ -78,4 +79,24 @@ export const userConnection = async (uid) => {
     const data = await executeQuery(query, variables)
 
     return data.connection;
+}
+
+export const recommendedUsers = async () => {
+    const query = `
+        query{
+            recommendedUsers{
+                uid
+                email
+                username
+                image
+                private
+            }
+        }
+    `;
+
+    const variables = { }
+
+    const data = await executeQuery(query, variables)
+
+    return data.recommendedUsers;
 }

@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useMutation } from 'react-query'
-import { addUserIntrestMutation } from '../../mutation/interest';
+import { addUserIntrestMutation, removeUserIntrestMutation } from '../../mutation/interest';
 import { categoriesQuery, myInterestQuery } from '../../query/interest'
+import Loader from '../Loader';
 
 function Categories() {
+    const queryClient = useQueryClient();
 
-    const { mutate: AddInterestMutation } = useMutation(addUserIntrestMutation, {
+    const { mutate: AddInterestMutation, isLoading : addingInterest } = useMutation(addUserIntrestMutation, {
         onSuccess: (data) => {
-            alert(data)
+            queryClient.invalidateQueries("interests")
+            queryClient.invalidateQueries("categories")
         }
     })
 
     const addInterest = (uid) => (event) => {
-        AddInterestMutation({ 'uid': uid })
+        AddInterestMutation(uid)
+    }
+
+
+    const { mutate: RemoveInterestMutation, isLoading : removingInterest } = useMutation(removeUserIntrestMutation, {
+        onSuccess: (data) => {
+            queryClient.invalidateQueries("interests")
+            queryClient.invalidateQueries("categories")
+        }
+    })
+
+    const removeInterest = (uid) => (event) => {
+        RemoveInterestMutation(uid)
     }
 
     const [dcategories, setDCategories] = useState([]);
     const [categories, setCategories] = useState([]);
     const [interests, setInterests] = useState([]);
 
-    const { isLoading } = useQuery("categories", categoriesQuery, {
+    const { isLoading : categoriesLoading } = useQuery("categories", categoriesQuery, {
         onSuccess: (data) => {
             setDCategories(data)
             setCategories(data)
@@ -50,24 +65,37 @@ function Categories() {
         setCategories(filteredCategories);
     };
 
+    if(addingInterest || removingInterest || categoriesLoading || interestLoading){
+        return <Loader />
+    }
+
     return (
         <div>
             <p className="text-3xl font-bold">My Interests</p>
             <div className="mt-3">
                 {interests.length > 0 ?
-                    <div>
+                    <div className='flex mt-3 flex-wrap'>
                         {interests.map((interest, index) => (
-                            <div>{interest.name}</div>
+                            <div className='card-cont' key={index}>
+                                <div className="card-border">
+                                    <p className="text-xl card-header">{interest.name}</p>
+                                    <hr className='my-2' />
+                                    <p className='flex-grow text-justify'>{interest.description}</p>
+                                    <div className="mt-3 flex justify-between">
+                                        <button className='card-action-btn'>View</button> <button onClick={removeInterest(interest.uid)} className='card-action-btn'>Remove Interest</button>
+                                    </div>
+                                </div>
+                            </div>
                         ))}
                     </div>
                     :
                     <div>No interests</div>
                 }
             </div>
-            <div className="my-2 flex justify-between">
+            <div className="my-2 flex justify-between mt-6">
                 <p className="text-3xl font-bold">Categories</p>
                 <div>
-                    <input onChange={searchCategory} id='search' type="text" className="input p-2 px-4" placeholder='search' />
+                    {/* <input onChange={searchCategory} id='search' type="text" className="input p-2 px-4" placeholder='search' /> */}
                 </div>
             </div>
             {categories.map((category, index) => (

@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import { is_authenticated } from './backend'
 import useAuthStore from './store/auth'
 import useThemeStore from './store/theme'
+import Loader from './components/Loader'
 
 function App() {
 
@@ -33,7 +34,7 @@ function App() {
   })
 
   return (
-    <Suspense fallback="Loading ....." >
+    <Suspense fallback={Loader} >
       <Base>
         <Routes>
           <Route path='' element={<Home />} />

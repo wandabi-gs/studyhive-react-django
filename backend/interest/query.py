@@ -1,11 +1,13 @@
 import graphene
-from intrest.types import CategoryType, InterestType, RecommendationType, UserInterestType
-from intrest.models import Category, Interest, Recommendation, UserInterest
+from engines.recommendation import get_interest_recommendations
+from interest.types import CategoryType, InterestType, RecommendationType, UserInterestType
+from interest.models import Category, Interest, Recommendation, UserInterest
 
 class InterestQuery(graphene.ObjectType):
     categories = graphene.List(CategoryType)
     category = graphene.Field(CategoryType, category_uid=graphene.UUID())
-    recommendations = graphene.List(RecommendationType, interest_uid=graphene.UUID())
+    # recommendations = graphene.List(RecommendationType, interest_uid=graphene.UUID())
+    recommendations = graphene.List(RecommendationType)
     recommendation = graphene.Field(RecommendationType, recommendation_uid=graphene.UUID())
     interest = graphene.Field(InterestType, interest_uid=graphene.UUID())
     user_interest = graphene.Field(UserInterestType, user_uid= graphene.UUID())
@@ -21,9 +23,13 @@ class InterestQuery(graphene.ObjectType):
     def resolve_category(self, info, category_uid):
         return Category.objects.get(uid=category_uid)
     
-    def resolve_recommendations(self, info, interest_uid):
-        interest = Interest.objects.get(uid=interest_uid)
-        return Recommendation.objects.filter(interest=interest)
+    def resolve_recommendations(self, info):
+        # interest = Interest.objects.get(uid=interest_uid)
+        # return Recommendation.objects.filter(interest=interest)
+        if not info.context.user:
+            return None
+        
+        return get_interest_recommendations(info.context.user)
     
     def resolve_recommendation(self, info, recommendation_uid):
         return Recommendation.objects.get(uid=recommendation_uid)

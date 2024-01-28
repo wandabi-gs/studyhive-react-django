@@ -83,6 +83,7 @@ export const myInterestQuery = async () => {
                 interests{
                     uid
                     name
+                    description
                     recommendations{
                         uid
                         title

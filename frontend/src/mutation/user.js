@@ -80,3 +80,62 @@ export const TogglePrivate = async () => {
 
   return response.togglePrivate;
 }
+
+export const addConnectionMutation = async (uid) => {
+  const mutation = `
+    mutation($uid:UUID!) {
+      addConnection(userUid:$uid){
+        success
+        message
+        error
+      }
+    }
+  `;
+
+  const variables = {uid};
+
+  const response = await executeMutation(mutation, variables);
+
+  return response.addConnection;
+}
+
+export const removeConnectionMutation = async (uid) => {
+  const mutation = `
+    mutation($uid:UUID!) {
+      removeConnection(userUid:$uid){
+        success
+        message
+        error
+      }
+    }
+  `;
+
+  const variables = {uid};
+
+  const response = await executeMutation(mutation, variables);
+
+  return response.removeConnection;
+}
+
+
+export const updateProfileMutation = async (data) => {
+  const { email, image } = data;
+
+  const mutation = `
+    mutation($email:String!, $image: Upload) {
+      updateProfile(email:$email, image:$image){
+        success
+        message
+        error{
+          message
+        }
+      }
+    }
+  `;
+
+  const variables = {email, image};
+  
+  const response = await executeMutation(mutation, variables);
+
+  return response.updateProfile;
+}

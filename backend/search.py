@@ -2,7 +2,7 @@ from decouple import config
 from googleapiclient.discovery import build
 import requests
 
-from intrest.models import Interest, Recommendation
+from interest.models import Interest, Recommendation
 
 API_KEY=config('GOOGLE_API_KEY')
 CX = config('GOOGLE_API_CX')

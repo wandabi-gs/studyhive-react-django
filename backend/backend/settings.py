@@ -13,14 +13,6 @@ INSTALLED_APPS = [
     'daphne',
     'admin_interface',
     'colorfield',
-    # 'rest_framework',
-    # 'rest_framework.authtoken',
-    # 'rest_auth',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.github',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,12 +23,11 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'user',
-    'intrest'
+    'interest'
 ]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    'allauth.account.middleware.AccountMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,9 +59,17 @@ ASGI_APPLICATION = 'backend.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE' : 'django.db.backends.mysql',
+        'NAME' : 'studyhive',
+        'USER' : 'wandabi',
+        'PASSWORD' : 'gydion1880',
+        'HOST' : 'localhost',
+        'PORT' : 3306 
     }
+    # {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -110,7 +109,6 @@ GRAPHENE = {
 AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
-    'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
 STATIC_URL = 'static/'
@@ -137,24 +135,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    },
-}
-
-SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_QUERY_EMAIL = True

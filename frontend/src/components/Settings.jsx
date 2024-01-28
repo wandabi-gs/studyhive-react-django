@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { profileQuery } from '../query/user';
 import useThemeStore from '../store/theme'
-import { TogglePrivate, changePassword } from '../mutation/user';
+import { TogglePrivate, changePassword, updateProfileMutation } from '../mutation/user';
 import { useNavigate } from 'react-router-dom';
+import { MEDIA_URL } from '../backend';
+import Loader from './Loader';
 
 function Settings() {
   const queryClient = useQueryClient()
@@ -15,11 +17,44 @@ function Settings() {
 
   const [email, setEmail] = useState("")
 
+  const [image, setImage] = useState(null)
+
+  const [error, setError] = useState(null)
+
+  const [loading, setLoading] = useState(true)
+
+  const { mutate: updateProfile, isLoading: profileUpdating } = useMutation(updateProfileMutation, {
+    onSuccess: (data) => {
+      if (!data.success) {
+        setError(data.error.message)
+      } else {
+        queryClient.invalidateQueries('user-profile')
+        navigate('/logout')
+      }
+    },
+    onError: (data) => {
+      setError("An error occured.Try again later")
+    },
+    onSettled : (data)=>{
+      setLoading(false)
+    }
+  })
+
+  const update_profile = (event) => {
+    event.preventDefault();
+    setError(null)
+    let data = {email:email, image:image} 
+    updateProfile(data)
+  }
+
   const { isLoading: profileLoading } = useQuery("user-profile", profileQuery, {
     onSuccess: (data) => {
       setProfile(data)
       setEmail(data?.email)
     },
+    onSettled : (data)=>{
+      setLoading(false)
+    }
   })
 
   const [passwords, setPasswords] = useState({
@@ -32,26 +67,29 @@ function Settings() {
     setPasswords({ ...passwords, [name]: event.target.value })
   }
 
-  const { mutate: change_password_mutation } = useMutation(changePassword, {
+  const { mutate: change_password_mutation, isLoading:passwordUpdating } = useMutation(changePassword, {
     onSuccess: (data) => {
-      if(!data.success){
+      if (!data.success) {
         setPasswordError(data.error.message)
-      }else{
+      } else {
         navigate("/logout")
       }
     },
     onError: (data) => {
       setPasswordError("An error occured.Try again later")
+    },
+    onSettled : (data)=>{
+      setLoading(false)
     }
   })
 
   const change_password = (event) => {
     event.preventDefault();
     setPasswordError(null)
-    change_password_mutation({oldPassword : current_password, newPassword:new_password})
+    change_password_mutation({ oldPassword: current_password, newPassword: new_password })
   }
-  
-  const { mutate: toggleVisisbiltyMutation } = useMutation(TogglePrivate)
+
+  const { mutate: toggleVisisbiltyMutation, isLoading : visibilityUpdating } = useMutation(TogglePrivate)
 
   const ToggleVisibility = (event) => {
     toggleVisisbiltyMutation();
@@ -62,15 +100,34 @@ function Settings() {
     queryClient.invalidateQueries('user-profile')
   }, [is_authenticated])
 
+  if(profileLoading || profileUpdating || passwordUpdating || visibilityUpdating){
+    return <Loader />
+  }
+  
   return (
     <div className="flex justify-center">
       <div className='basis-1/3'>
         {profile && (
           <div>
-            <div className='rounded p-3'>
+            <form onSubmit={update_profile} className='rounded p-3'>
               <div>
+                {/* <div className="control">
+                  <div className="flex justify-center">
+                    <img src={MEDIA_URL + "/" + profile?.image} className='rounded-full w-40' alt="" />
+                  </div>
+                  <div>
+                    <div className="control mt-4">
+                      <input type="file" onChange={(e) => setImage(e.target.files[0])} className="profile-input" />
+                    </div>
+                    <div className="control flex justify-end">
+                      <button className="form-button max-w-fit bg-indigo-500">Upload Image</button>
+                    </div>
+                  </div>
+                </div> */}
+
                 <h3 className="text-xl font-semibold mt-5 mb-2">Profile Information</h3>
                 <hr className="my-3 border-black dark:border-white" />
+                {error && (<p className='m-3 input-error'>{error}</p>)}
                 <div className="control">
                   <input type="text" autoComplete='off' readOnly defaultValue={profile?.username} id="username" className="select-none profile-input" />
                 </div>
@@ -80,10 +137,10 @@ function Settings() {
                 </div>
 
                 <div className="control">
-                  <button className="form-button">Update Profile</button>
+                  <button type='submit' className="form-button">Update Profile</button>
                 </div>
               </div>
-            </div>
+            </form>
 
             <div className='rounded p-3'>
               <h3 className="text-xl font-semibold mt-5 mb-2">Privacy Settings</h3>

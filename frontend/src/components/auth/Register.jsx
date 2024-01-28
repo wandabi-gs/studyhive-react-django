@@ -8,6 +8,7 @@ import useThemeStore from '../../store/theme'
 import { UserRegister } from "../../mutation/user";
 import blackLogo from "../../assets/logo/black.png"
 import whiteLogo from "../../assets/logo/white.png"
+import Loader from '../Loader';
 
 function Register() {
     const navigate = useNavigate()
@@ -40,7 +41,7 @@ function Register() {
     }
 
 
-    const { mutate } = useMutation(UserRegister, {
+    const { isLoading, mutate } = useMutation(UserRegister, {
         onError: (error) => {
             console.log(error)
         },
@@ -57,7 +58,8 @@ function Register() {
                     setErrors({ e_password: b_error.message })
                 }
             }
-        }
+        },
+
     });
 
     const postForm = (event) => {
@@ -73,6 +75,9 @@ function Register() {
         }
       }, [])
 
+    if(isLoading){
+        return <Loader />
+    } 
     return (
         <div className="mt-10 flex justify-center">
             <div className="basis-3/12 p-4 flex flex-col">

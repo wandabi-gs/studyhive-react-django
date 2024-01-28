@@ -1,6 +1,6 @@
 import graphene
-from intrest.types import RecommendationType, InterestType, CategoryType, UserInterestType
-from intrest.models import Recommendation, Interest, Category, UserInterest, UserReview
+from interest.types import RecommendationType, InterestType, CategoryType, UserInterestType
+from interest.models import Recommendation, Interest, Category, UserInterest, UserReview
 
 class ErrorType(graphene.ObjectType):
     field = graphene.String()

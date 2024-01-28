@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class IntrestConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "intrest"
+    name = "interest"
