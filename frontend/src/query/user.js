@@ -4,6 +4,7 @@ export const profileQuery = async () => {
     const query = `
         query{
             userProfile{
+                uid
                 email
                 username
                 image
@@ -47,6 +48,13 @@ export const userConnections = async () => {
                     uid
                     email
                     username
+                    image
+                }
+                user{
+                    uid
+                    email
+                    username
+                    image
                 }
             }
         }
@@ -69,6 +77,13 @@ export const userConnection = async (uid) => {
                     uid
                     email
                     username
+                    image
+                }
+                user{
+                    uid
+                    email
+                    username
+                    image
                 }
             }
         }
@@ -94,9 +109,28 @@ export const recommendedUsers = async () => {
         }
     `;
 
-    const variables = { }
+    const variables = {}
 
     const data = await executeQuery(query, variables)
 
     return data.recommendedUsers;
+}
+
+export const userQuery = async (uid) => {
+    const query = `
+        query($uid:UUID!){
+            user(userUid:$uid){
+                email
+                username
+                image
+                private
+            }
+        }
+    `;
+
+    const variables = {uid}
+
+    const data = await executeQuery(query, variables)
+
+    return data.user;
 }

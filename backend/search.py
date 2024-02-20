@@ -28,15 +28,30 @@ def search_youtube(query, max_results=10):
 
     return videos
 
-search_query = 'Python programming tutorial'
+def update_recommendations_youtube():
+    for interest in Interest.objects.all():
+        results = search_youtube(interest.name)
+        for result in results:
+            try:
+                Recommendation.objects.get(video_id=result["video_id"])
+                continue
+            
+            except Recommendation.DoesNotExist:
+                try:
+                    recommendation = Recommendation.objects.create(
+                        title=str(result['title']),
+                        url=f'https://www.youtube.com/watch?v={result["video_id"]}',
+                        thumbnail=result['thumbnail_url'],
+                        source='youtube',
+                        video_id = result['video_id']
+                    )
 
-search_results = search_youtube(query=search_query)
-
-for result in search_results:
-    print(f"Title: {result['title']}")
-    print(f"Video ID: {result['video_id']}")
-    print(f"Thumbnail URL: {result['thumbnail_url']}")
-    print("\n")
+                    interest.recommendations.add(recommendation)
+                
+                except Exception as e:
+                    print(result['title'])
+                    print("")
+                    continue
 
 
 def search(query):

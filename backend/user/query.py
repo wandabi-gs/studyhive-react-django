@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from user.types import ConnectionType, ReportedUserType, UserType
 from user.models import Connection, ReportedUser
 from engines.user import get_user_recommendations
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -42,7 +43,7 @@ class UserQuery(graphene.ObjectType):
         if not info.context.user:
             return None
         
-        return Connection.objects.filter(user=info.context.user)
+        return Connection.objects.filter((Q(user=info.context.user) | Q(connection=info.context.user)), ~Q(connection_status="revoked"))
     
     def resolve_recommended_users(self, info):
         if not info.context.user:

@@ -38,7 +38,8 @@ export const categoryQuery = async (uid) => {
                         uid
                         title
                         url
-                        preview
+                        thumbnail
+                        videoId
                     }
                 }
             }
@@ -52,18 +53,20 @@ export const categoryQuery = async (uid) => {
     return data.category;
 }
 
-export const intrestQuery = async (uid) => {
+export const interestQuery = async (uid) => {
     const query = `
-        query($uid: String!){
-            intrest(intrestUid: $uid){
+        query($uid: UUID!){
+            interest(interestUid: $uid){
                 uid
                 name
                 description
                 recommendations{
                     uid
                     title
+                    source
                     url
-                    preview
+                    thumbnail
+                    videoId
                 }
             }
         }
@@ -73,7 +76,7 @@ export const intrestQuery = async (uid) => {
 
     const data = await executeQuery(query, variables)
 
-    return data.intrest;
+    return data.interest;
 }
 
 export const myInterestQuery = async () => {
@@ -88,7 +91,9 @@ export const myInterestQuery = async () => {
                         uid
                         title
                         url
-                        preview
+                        thumbnail
+                        videoId
+                        source
                     }
                 }
             }
@@ -104,11 +109,12 @@ export const myInterestQuery = async () => {
 
 export const userInterestQuery = async (uid) => {
     const query = `
-        query($uid:UUID){
-            userInterests{
+        query($uid:UUID!){
+            userInterest(userUid:$uid){
                 interests{
                     uid
                     name
+                    description
                 }
             }
         }
@@ -118,5 +124,5 @@ export const userInterestQuery = async (uid) => {
 
     const data = await executeQuery(query, variables)
 
-    return data.userInterests;
+    return data.userInterest;
 }

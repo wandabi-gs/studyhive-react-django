@@ -1,9 +1,9 @@
 import graphene
 from graphene_file_upload.scalars import Upload
-from rest_framework.authtoken.views import APIView
-from rest_framework.response import Response
+from django.db.models import Q
 from user.models import CustomUser, Connection, ReportedUser
 from interest.models import UserInterest
+
 
 class ErrorType(graphene.ObjectType):
     field = graphene.String()
@@ -152,8 +152,6 @@ class UpdateProfile(graphene.Mutation):
 
         if image:
             user.image = image
-        print(email)
-        print(image)
         user.save()
         message = "Profile updated successfully"
 
@@ -183,7 +181,7 @@ class AddConnection(graphene.Mutation):
 
         if success:
             try:
-                user_connection = Connection.objects.get(connection=connection)
+                user_connection = Connection.objects.get(Q(connection=connection, user=user) | Q(connection=user, user=connection))
                 if user_connection.connection_status == "revoked":
                     user_connection.connection_status = "pending"
                     user_connection.save()
@@ -191,8 +189,8 @@ class AddConnection(graphene.Mutation):
                 else:
                     error = ErrorType(field="user_uid", message="You are already connected")
                     success = False
-            except CustomUser.connection.RelatedObjectDoesNotExist:
-                user.connection.create(connection=connection, connection_status="pending")
+            except Connection.DoesNotExist:
+                Connection.objects.create(connection=connection, user=user, connection_status="pending")
                 message = "Connection request sent successfully"
 
         return AddConnection(success=success, message=message, error=error)
@@ -223,6 +221,54 @@ class AcceptConnection(graphene.Mutation):
             message = "Connection accepted successfully"
 
         return AcceptConnection(success=success, message=message, error=error)
+    
+class RevokeConnection(graphene.Mutation):
+    class Arguments:
+        connection_uid = graphene.UUID(required=True)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    error = graphene.Field(ErrorType)
+
+    def mutate(self, info, connection_uid):
+        success = True
+        message = ""
+        error = None
+
+        user = info.context.user
+        connection = Connection.objects.get(uid=connection_uid)
+
+        if user.uid != connection.connection.uid:
+            error = ErrorType(field="connection_uid", message="You cannot revoke this connection")
+            success = False
+        
+        else:
+            connection.connection_status = "revoked"
+            connection.save()
+            message = "Connection revoked successfully"
+
+        return RevokeConnection(success=success, message=message, error=error)
+    
+class RemoveConnection(graphene.Mutation):
+    class Arguments:
+        connection_uid = graphene.UUID(required=True)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    error = graphene.Field(ErrorType)
+
+    def mutate(self, info, connection_uid):
+        success = True
+        message = ""
+        error = None
+
+        connection = Connection.objects.get(uid=connection_uid)
+        
+        connection.delete()
+        message = "Connection removed successfully"
+
+        return RemoveConnection(success=success, message=message, error=error)
+
 
 class addReportedUser(graphene.Mutation):
     class Arguments:
@@ -263,6 +309,8 @@ class UserMutation(graphene.ObjectType):
     change_password = ChangePassword.Field()
     add_connection = AddConnection.Field()
     accept_connection = AcceptConnection.Field()
+    revoke_connection = RevokeConnection.Field()
+    remove_connection = RemoveConnection.Field()
     report_user = addReportedUser.Field()
     toggle_private = TogglePrivateAccount.Field()
     update_profile = UpdateProfile.Field()

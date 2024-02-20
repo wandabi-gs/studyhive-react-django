@@ -1,4 +1,5 @@
 export const BACKEND_URL = 'http://localhost:8000'
+// export const BACKEND_URL = 'http://10.0.28.80:8000'
 export const API_ENDPOINT = BACKEND_URL + "/api"
 export const MEDIA_URL = BACKEND_URL + "/media"
 

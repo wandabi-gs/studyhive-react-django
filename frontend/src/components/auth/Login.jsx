@@ -67,7 +67,7 @@ function Login() {
 
   return (
     <div className="mt-10 flex justify-center">
-      <div className="basis-3/12 p-4 flex flex-col">
+      <div className="md:basis-3/12 p-4 flex flex-col">
         <div className='flex justify-center'>
           <div className="rounded-full w-44 h-44 p-6 mb-5 border-4 border-indigo-800 dark:border-indigo-400">
             <img src={darkModeEnabled ? whiteLogo : blackLogo} className='' alt="" />

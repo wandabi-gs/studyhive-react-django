@@ -7,10 +7,11 @@ SECRET_KEY = 'django-insecure-i3+b(jiib6+!5ozj6+^nqt2sdnbm(#-3+(11b#h24ou+y67gd3
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["10.0.28.80","127.0.0.1","localhost"]
 
 INSTALLED_APPS = [
     'daphne',
+    'channels',
     'admin_interface',
     'colorfield',
     'django.contrib.admin',
@@ -23,7 +24,8 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'user',
-    'interest'
+    'interest',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -125,13 +127,20 @@ AUTH_USER_MODEL ='user.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://12.0.0.1:5173",
+    "http://10.0.28.80:5173"
 ]
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+    }
 }
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }

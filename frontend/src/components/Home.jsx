@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {  } from 'react';
 import { motion } from 'framer-motion'
 import useThemeStore from '../store/theme';
 import blackLogo from '../assets/logo/black.png'
@@ -37,7 +37,6 @@ function Home() {
 
   return (
     <div className="max-h-fit mt-16 flex">
-
       <div className="basis-1/3 p-2 flex flex-col w-full">
         <div className="basis-1/3">
           <FeatureCard data={featureDataPersonalized} isOdd={true} />
@@ -48,20 +47,9 @@ function Home() {
         </div>
       </div>
 
-      <div className="basis-1/3 p-2 flex flex-col justify-center">
-        <div className="w-full flex justify-center my-4">
-          <img className='w-72' src={darkModeEnabled ? whiteLogo : blackLogo} alt="" />
-        </div>
-
-        <div className="flex justify-center w-full">
-          <div className="mt-4 text-center">
-            <p className="text-5xl font-bold">Welcome To Studyhive</p>
-            <p className="text-xl mt-2">Your Group Based online learning platform powered by a personalised recommendation engine</p>
-          </div>
-        </div>
-
-        <div className="mt-2 flex justify-center">
-          <Link className='mt-2 py-3 px-5 border rounded-full hover:bg-gradient-to-tr from-indigo-400 to-violet-600 hover:text-white border-indigo-800' to="/categories">Get Started</Link>
+      <div className="basis-1/3 p-2 flex flex-col justify-center items-center">
+        <div className="w-96 flex justify-center items-center my-4 h-96 rounded-full border-2 border-indigo-500">
+          <img className='h-60' src={darkModeEnabled ? whiteLogo : blackLogo} alt="" />
         </div>
       </div>
 
@@ -99,7 +87,7 @@ export const FeatureCard = ({ data, isOdd }) => {
         <h3 className='text-3xl py-3 card-header'>
           <span className="py-3">{data.title}</span>
         </h3>
-          <hr />
+        <hr />
         <p className='text-xl py-3'>{data.description}</p>
       </motion.div>
     </div>

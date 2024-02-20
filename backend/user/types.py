@@ -1,6 +1,6 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-from user.models import ReportedUser, Connection, CustomUser
+from user.models import ReportedUser, Connection
 
 class UserType(graphene.ObjectType):
     uid = graphene.UUID()

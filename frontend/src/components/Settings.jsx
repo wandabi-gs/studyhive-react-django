@@ -19,6 +19,20 @@ function Settings() {
 
   const [image, setImage] = useState(null)
 
+  const changeImage = (event) => {
+    setImage(event.target.files[0])
+    
+    const imageFile = event.target.files[0];
+    const userImageElement = document.getElementById('userImage');
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      userImageElement.src = e.target.result;
+    };
+
+    reader.readAsDataURL(imageFile);
+  }
+
   const [error, setError] = useState(null)
 
   const [loading, setLoading] = useState(true)
@@ -35,7 +49,7 @@ function Settings() {
     onError: (data) => {
       setError("An error occured.Try again later")
     },
-    onSettled : (data)=>{
+    onSettled: (data) => {
       setLoading(false)
     }
   })
@@ -43,7 +57,7 @@ function Settings() {
   const update_profile = (event) => {
     event.preventDefault();
     setError(null)
-    let data = {email:email, image:image} 
+    let data = { email: email, image: image }
     updateProfile(data)
   }
 
@@ -52,7 +66,7 @@ function Settings() {
       setProfile(data)
       setEmail(data?.email)
     },
-    onSettled : (data)=>{
+    onSettled: (data) => {
       setLoading(false)
     }
   })
@@ -67,7 +81,7 @@ function Settings() {
     setPasswords({ ...passwords, [name]: event.target.value })
   }
 
-  const { mutate: change_password_mutation, isLoading:passwordUpdating } = useMutation(changePassword, {
+  const { mutate: change_password_mutation, isLoading: passwordUpdating } = useMutation(changePassword, {
     onSuccess: (data) => {
       if (!data.success) {
         setPasswordError(data.error.message)
@@ -78,7 +92,7 @@ function Settings() {
     onError: (data) => {
       setPasswordError("An error occured.Try again later")
     },
-    onSettled : (data)=>{
+    onSettled: (data) => {
       setLoading(false)
     }
   })
@@ -89,7 +103,7 @@ function Settings() {
     change_password_mutation({ oldPassword: current_password, newPassword: new_password })
   }
 
-  const { mutate: toggleVisisbiltyMutation, isLoading : visibilityUpdating } = useMutation(TogglePrivate)
+  const { mutate: toggleVisisbiltyMutation, isLoading: visibilityUpdating } = useMutation(TogglePrivate)
 
   const ToggleVisibility = (event) => {
     toggleVisisbiltyMutation();
@@ -100,34 +114,31 @@ function Settings() {
     queryClient.invalidateQueries('user-profile')
   }, [is_authenticated])
 
-  if(profileLoading || profileUpdating || passwordUpdating || visibilityUpdating){
+  if (profileLoading || profileUpdating || passwordUpdating || visibilityUpdating) {
     return <Loader />
   }
-  
+
   return (
     <div className="flex justify-center">
       <div className='basis-1/3'>
         {profile && (
           <div>
             <form onSubmit={update_profile} className='rounded p-3'>
+
+              <h3 className="text-xl font-semibold mt-5 mb-2">Profile Information</h3>
+              <hr className="my-3 border-black dark:border-white" />
+              {error && (<p className='m-3 input-error'>{error}</p>)}
               <div>
-                {/* <div className="control">
+                <div className="control">
                   <div className="flex justify-center">
-                    <img src={MEDIA_URL + "/" + profile?.image} className='rounded-full w-40' alt="" />
+                    <img src={MEDIA_URL + "/" + profile?.image} id='userImage' className='rounded-full w-40' alt="" />
                   </div>
                   <div>
                     <div className="control mt-4">
-                      <input type="file" onChange={(e) => setImage(e.target.files[0])} className="profile-input" />
-                    </div>
-                    <div className="control flex justify-end">
-                      <button className="form-button max-w-fit bg-indigo-500">Upload Image</button>
+                      <input type="file" accept='image/*' onChange={changeImage} className="profile-input" />
                     </div>
                   </div>
-                </div> */}
-
-                <h3 className="text-xl font-semibold mt-5 mb-2">Profile Information</h3>
-                <hr className="my-3 border-black dark:border-white" />
-                {error && (<p className='m-3 input-error'>{error}</p>)}
+                </div>
                 <div className="control">
                   <input type="text" autoComplete='off' readOnly defaultValue={profile?.username} id="username" className="select-none profile-input" />
                 </div>
@@ -156,12 +167,12 @@ function Settings() {
           </div>
         )}
 
-        <form onSubmit={change_password} className='rounded p-3'>
+        <form autoComplete='off' onSubmit={change_password} className='rounded p-3'>
           <h3 className="text-xl font-semibold mt-5 mb-2">Update Password</h3>
           {passwordError && (<p className='m-3 input-error'>{passwordError}</p>)}
           <hr className="my-3 border-black dark:border-white" />
           <div className="control">
-            <input type="password" value={current_password} onChange={ChangePassword('current_password')} placeholder='Current Password' id="" className="profile-input" />
+            <input type="password" autoComplete='off' value={current_password} onChange={ChangePassword('current_password')} placeholder='Current Password' id="" className="profile-input" />
           </div>
 
           <div className="control">

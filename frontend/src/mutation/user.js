@@ -87,12 +87,15 @@ export const addConnectionMutation = async (uid) => {
       addConnection(userUid:$uid){
         success
         message
-        error
+        error{
+          field
+          message
+        }
       }
     }
   `;
 
-  const variables = {uid};
+  const variables = { uid };
 
   const response = await executeMutation(mutation, variables);
 
@@ -101,16 +104,19 @@ export const addConnectionMutation = async (uid) => {
 
 export const removeConnectionMutation = async (uid) => {
   const mutation = `
-    mutation($uid:UUID!) {
-      removeConnection(userUid:$uid){
+    mutation($uid:UUID!){
+      removeConnection(connectionUid:$uid){
         success
         message
-        error
+        error{
+          field
+          message
+        }
       }
-    }
+    }  
   `;
 
-  const variables = {uid};
+  const variables = { uid };
 
   const response = await executeMutation(mutation, variables);
 
@@ -133,9 +139,51 @@ export const updateProfileMutation = async (data) => {
     }
   `;
 
-  const variables = {email, image};
-  
+  const variables = { email, image };
+
   const response = await executeMutation(mutation, variables);
 
   return response.updateProfile;
+}
+
+export const acceptConnectionMutation = async (uid) => {
+  const mutation = `
+    mutation($uid:UUID!){
+      acceptConnection(connectionUid:$uid){
+        success
+        message
+        error{
+          field
+          message
+        }
+      }
+    }  
+  `;
+
+  const variables = { uid };
+
+  const response = await executeMutation(mutation, variables);
+
+  return response.acceptConnection;
+}
+
+export const revokeConnectionMutation = async (uid) => {
+  const mutation = `
+    mutation($uid:UUID!){
+      revokeConnection(connectionUid:$uid){
+        success
+        message
+        error{
+          field
+          message
+        }
+      }
+    }  
+  `;
+
+  const variables = { uid };
+
+  const response = await executeMutation(mutation, variables);
+
+  return response.revokeConnection;
 }

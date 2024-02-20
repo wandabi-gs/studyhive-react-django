@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 function Logout() {
     const navigate = useNavigate()
 
+    // window.location.reload();
+
     const logout = useAuthStore((state) => state.logout)
 
     useEffect(() => {

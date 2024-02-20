@@ -26,7 +26,7 @@ function Base({ children }) {
   const ToggleSidebar = (event) => {
     event.preventDefault();
     document.getElementById('sidebar').classList.toggle('basis-72')
-
+    document.getElementById('sidebar').classList.toggle('hidden')
     setSidebarActive(!sidebarActive)
   }
 
@@ -41,7 +41,7 @@ function Base({ children }) {
 
   return (
     <div className="h-screen w-screen flex">
-      <aside className='basis-16 min-w-fit shadow-xl flex flex-col p-3 bg-white dark:bg-slate-900 transition-all duration-500 ease-in-out' id='sidebar'>
+      <aside className='basis-16 min-w-fit shadow-xl hidden md:flex flex-col p-3 bg-white dark:bg-slate-900 transition-all duration-500 ease-in-out' id='sidebar'>
         <SidebarLink display="all" sidebarActive={sidebarActive} currentRoute={route} name="Home" url="/" route="home" icon={faHome} getRoute={getRoute} />
         
         <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Interests" url="interests" route="interests" icon={faBook} getRoute={getRoute} />
@@ -52,9 +52,9 @@ function Base({ children }) {
 
         <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Account Settings" url="/settings" route="settings" icon={faGear} getRoute={getRoute} />
 
-        <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="For You" url="/for-you" route="for-you" icon={faUserCircle} getRoute={getRoute} />
+        <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="User Content" url="/user-content" route="user-content" icon={faUserCircle} getRoute={getRoute} />
 
-        <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Group Chat" url="/group-chat" route="group-chat" icon={faUserGroup} getRoute={getRoute} />
+        <SidebarLink display="auth" sidebarActive={sidebarActive} currentRoute={route} name="Groups" url="/group-chat" route="group-chat" icon={faUserGroup} getRoute={getRoute} />
 
         <SidebarLink display="all" sidebarActive={sidebarActive} currentRoute={route} name="Community Forum" url="/forum" route="forum-chat" icon={faPeopleGroup} getRoute={getRoute} />
 
